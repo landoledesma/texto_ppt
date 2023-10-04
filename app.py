@@ -2,6 +2,7 @@ import streamlit as st
 import openai
 import pptx
 from  pptx.util import Inches, Pt
+import base64
 import os 
 from dotenv import load_dotenv
 
@@ -48,4 +49,36 @@ def create_presentation(topic,slide_titles,slide_contents):
     prs.save(f"ppt/{topic}_presentacion.pptx")
 
 
-    
+def get_ppt_download_link(topic):
+    ppt_filename = f"generated_ppt/{topic}_presentation.pptx"
+
+    with open(ppt_filename, "rb") as file:
+        ppt_contents = file.read()
+
+    b64_ppt = base64.b64encode(ppt_contents).decode()
+    return f'<a href="data:application/vnd.openxmlformats-officedocument.presentationml.presentation;base64,{b64_ppt}" download="{ppt_filename}">Download the PowerPoint Presentation</a>'
+
+
+def main():
+    st.title("PowerPoint Presentation Generator with GPT-3.5-turbo")
+
+    topic = st.text_input("Enter the topic for your presentation:")
+    generate_button = st.button("Generate Presentation")
+
+    if generate_button and topic:
+        st.info("Generating presentation... Please wait.")
+        slide_titles = slide_titles(topic)
+        filtered_slide_titles= [item for item in slide_titles if item.strip() != '']
+        print("Slide Title: ", filtered_slide_titles)
+        slide_contents = [slide_content(title) for title in filtered_slide_titles]
+        print("Slide Contents: ", slide_contents)
+        create_presentation(topic, filtered_slide_titles, slide_contents)
+        print("Presentation generated successfully!")
+
+        st.success("Presentation generated successfully!")
+        st.markdown(get_ppt_download_link(topic), unsafe_allow_html=True)
+
+
+
+if __name__ == "__main__":
+    main()
