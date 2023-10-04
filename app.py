@@ -49,7 +49,7 @@ def create_presentation(topic,slide_titles,slide_contents):
     prs.save(f"ppt/{topic}_presentacion.pptx")
 
 
-def get_ppt_download_link(topic):
+def download_link(topic):
     ppt_filename = f"generated_ppt/{topic}_presentation.pptx"
 
     with open(ppt_filename, "rb") as file:
@@ -60,25 +60,23 @@ def get_ppt_download_link(topic):
 
 
 def main():
-    st.title("PowerPoint Presentation Generator with GPT-3.5-turbo")
+    st.title("PGeneracion de presentaciones ")
 
-    topic = st.text_input("Enter the topic for your presentation:")
-    generate_button = st.button("Generate Presentation")
+    topic = st.text_input("Escribe el tema de la presentacion:")
+    generate_button = st.button("Crear presentacion")
 
     if generate_button and topic:
-        st.info("Generating presentation... Please wait.")
+        st.info("Generando presentacion... Por favor espera .")
         slide_titles = slide_titles(topic)
         filtered_slide_titles= [item for item in slide_titles if item.strip() != '']
-        print("Slide Title: ", filtered_slide_titles)
+        print("Titulo: ", filtered_slide_titles)
         slide_contents = [slide_content(title) for title in filtered_slide_titles]
-        print("Slide Contents: ", slide_contents)
+        print("Contenido: ", slide_contents)
         create_presentation(topic, filtered_slide_titles, slide_contents)
-        print("Presentation generated successfully!")
+        print("Todo salio correcto!")
 
-        st.success("Presentation generated successfully!")
-        st.markdown(get_ppt_download_link(topic), unsafe_allow_html=True)
-
-
+        st.success("Presentacion generado correctamente!")
+        st.markdown(download_link(topic), unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
