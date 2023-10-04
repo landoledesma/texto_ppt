@@ -25,11 +25,11 @@ def slide_title(topic):
     return response['choices'][0]['text'].split("\n")
 
 def slide_content(slide_title):
-    prompt = f"Genera contenido para eltitulo del slide '{slide_title}'."
+    prompt = f"Genera contenido para cada titulo del slide  '{slide_title}'."
     response = openai.Completion.create(
         engine = "text-davinci-003",
         prompt = prompt,
-        max_tokens = 1000
+        max_tokens = 500
     )
     return response['choices'][0]['text']
 
@@ -55,8 +55,6 @@ def create_presentation(topic,slide_titles,slide_contents):
                 for paragraph in text_frame.paragraphs:
                     paragraph.font.size = SLIDE_FONT_SIZE
     prs.save(f"generated_ppt/{topic}_presentation.pptx")
-
-
 
 def download_link(topic):
     # Verificar y crear el directorio 'generated_ppt' si no existe
